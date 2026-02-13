@@ -8,11 +8,7 @@
     "destroy": "alchemy destroy",
     "postinstall": "vibe-rules install claude-code"
   },
-  "dependencies": {
-    "hono": "^4.9.2"
-  },
   "devDependencies": {
-    "@cloudflare/workers-types": "^4.20250820.0",
     "@types/node": "^24.3.0",
     "alchemy": "0.84.0",
     "vibe-rules": "^0.3.91"

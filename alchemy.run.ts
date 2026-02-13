@@ -1,45 +1,28 @@
 import alchemy from "alchemy";
-import { GitHubComment } from "alchemy/github";
+import { Tunnel } from "alchemy/cloudflare";
 import { CloudflareStateStore } from "alchemy/state";
-import { KVNamespace, Worker } from "alchemy/cloudflare";
 
 const app = await alchemy("cfa-tana-tunnel", {
-  stateStore: (scope) => new CloudflareStateStore(scope),
+	stateStore: (scope) => new CloudflareStateStore(scope),
 });
 
-const kv = await KVNamespace("kv", {
-  title: "kv",
+const tunnel = await Tunnel("tana-mcp", {
+	name: "tana-mcp",
+	adopt: true,
+	ingress: [
+		{
+			hostname: "tana.nicobaier.com",
+			service: "http://localhost:8262",
+			originRequest: { httpHostHeader: "localhost:8262" },
+		},
+		{
+			service: "http_status:404",
+		},
+	],
 });
 
-export const worker = await Worker("worker", {
-  entrypoint: "src/index.ts",
-  bindings: {
-    KV: kv,
-  },
-});
-
-console.log(worker.url);
-
-
-if (process.env.PULL_REQUEST) {
-  const previewUrl = worker.url;
-
-  await GitHubComment("pr-preview-comment", {
-    owner: process.env.GITHUB_REPOSITORY_OWNER || "your-username",
-    repository: process.env.GITHUB_REPOSITORY_NAME || "cfa-tana-tunnel",
-    issueNumber: Number(process.env.PULL_REQUEST),
-    body: `
-## 🚀 Preview Deployed
-
-Your preview is ready!
-
-**Preview URL:** ${previewUrl}
-
-This preview was built from commit ${process.env.GITHUB_SHA}
-
----
-<sub>🤖 This comment will be updated automatically when you push new commits to this PR.</sub>`,
-  });
-}
+console.log("Tunnel ID:", tunnel.tunnelId);
+console.log("Run locally with:");
+console.log(`  cloudflared tunnel run --token ${tunnel.token.unencrypted}`);
 
 await app.finalize();

@@ -4,11 +4,7 @@
   "workspaces": {
     "": {
       "name": "cfa-tana-tunnel",
-      "dependencies": {
-        "hono": "^4.9.2",
-      },
       "devDependencies": {
-        "@cloudflare/workers-types": "^4.20250820.0",
         "@types/node": "^24.3.0",
         "alchemy": "0.84.0",
         "vibe-rules": "^0.3.91",
@@ -417,8 +413,6 @@
     "graceful-fs": ["graceful-fs@4.2.11", "", {}, "sha512-RbJ5/jmFcNNCcDV5o9eTnBLJ/HszWV0P73bc+Ff4nS/rJj+YaS6IGyiOL0VoBYX+l1Wrl3k63h/KrH+nhJ0XvQ=="],
 
     "has-flag": ["has-flag@4.0.0", "", {}, "sha512-EykJT/Q1KjTWctppgIAgfSO0tKVuZUjhgMr17kqTumMl6Afv3EISleU7qZUzoXDFTAHTDC4NOoG/ZxU3EvlMPQ=="],
-
-    "hono": ["hono@4.11.9", "", {}, "sha512-Eaw2YTGM6WOxA6CXbckaEvslr2Ne4NFsKrvc0v97JD5awbmeBLO5w9Ho9L9kmKonrwF9RJlW6BxT1PVv/agBHQ=="],
 
     "human-signals": ["human-signals@8.0.1", "", {}, "sha512-eKCa6bwnJhvxj14kZk5NCPc6Hb6BdsU9DZcOnmQKSnO1VKrfV0zCvtttPZUsBvjmNDn8rpcJfpwSYnHBjc95MQ=="],
 
