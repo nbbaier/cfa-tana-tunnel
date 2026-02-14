@@ -12,5 +12,8 @@
     "@types/node": "^24.3.0",
     "alchemy": "0.84.0",
     "vibe-rules": "^0.3.91"
+  },
+  "dependencies": {
+    "hono": "^4.11.9"
   }
 }
