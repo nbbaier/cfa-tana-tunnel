@@ -1,5 +1,5 @@
 import alchemy from "alchemy";
-import { Tunnel, KVNamespace, Worker } from "alchemy/cloudflare";
+import { KVNamespace, Tunnel, Worker, WranglerJson } from "alchemy/cloudflare";
 
 const app = await alchemy("cfa-tana-tunnel");
 
@@ -31,6 +31,7 @@ const oauthKv = await KVNamespace("oauth-kv", {
 
 // OAuth proxy Worker at tana.nicobaier.com
 const worker = await Worker("tana-proxy", {
+	name: `tana-proxy-${app.stage}`,
 	entrypoint: "./src/worker.ts",
 	url: false,
 	adopt: true,
@@ -48,6 +49,8 @@ const worker = await Worker("tana-proxy", {
 		},
 	],
 });
+
+await WranglerJson({ worker });
 
 console.log("Worker:", worker.name);
 
