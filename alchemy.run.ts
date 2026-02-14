@@ -1,7 +1,12 @@
 import alchemy from "alchemy";
 import { KVNamespace, Tunnel, Worker, WranglerJson } from "alchemy/cloudflare";
+import { CloudflareStateStore } from "alchemy/state";
 
-const app = await alchemy("cfa-tana-tunnel");
+const app = await alchemy("cfa-tana-tunnel", {
+	stateStore: (scope) => new CloudflareStateStore(scope),
+	password: process.env.ALCHEMY_PASSWORD,
+	adopt: true,
+});
 
 // Tunnel now routes to tana-origin.nicobaier.com
 const tunnel = await Tunnel("tana-mcp", {
