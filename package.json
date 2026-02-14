@@ -1,16 +1,19 @@
 {
-  "name": "cfa-tana-tunnel",
-  "type": "module",
-  "scripts": {
-    "check": "tsc --noEmit",
-    "dev": "alchemy dev",
-    "deploy": "alchemy deploy",
-    "destroy": "alchemy destroy",
-    "postinstall": "vibe-rules install claude-code"
-  },
-  "devDependencies": {
-    "@types/node": "^24.3.0",
-    "alchemy": "0.84.0",
-    "vibe-rules": "^0.3.91"
-  }
+	"name": "cfa-tana-tunnel",
+	"type": "module",
+	"scripts": {
+		"check": "tsc --noEmit",
+		"dev": "alchemy dev --stage dev",
+		"deploy": "alchemy deploy --stage prod",
+		"destroy": "alchemy destroy",
+		"postinstall": "vibe-rules install claude-code"
+	},
+	"devDependencies": {
+		"@types/node": "^24.3.0",
+		"alchemy": "0.84.0",
+		"vibe-rules": "^0.3.91"
+	},
+	"dependencies": {
+		"hono": "^4.11.9"
+	}
 }

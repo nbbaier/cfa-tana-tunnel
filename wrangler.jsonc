@@ -1,0 +1,17 @@
+{
+  "name": "tana-proxy-prod",
+  "main": "src/worker.ts",
+  "compatibility_date": "2026-02-12",
+  "compatibility_flags": [],
+  "vars": {
+    "ORIGIN_URL": "https://tana-origin.nicobaier.com",
+    "PUBLIC_URL": "https://tana.nicobaier.com"
+  },
+  "kv_namespaces": [
+    {
+      "binding": "OAUTH_KV",
+      "id": "ccc1d34d71b043bab8f0c98779e117bf",
+      "preview_id": "ccc1d34d71b043bab8f0c98779e117bf"
+    }
+  ]
+}

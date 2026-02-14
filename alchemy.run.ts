@@ -1,14 +1,47 @@
 import alchemy from "alchemy";
-import { Tunnel } from "alchemy/cloudflare";
+import { KVNamespace, Tunnel, Worker, WranglerJson } from "alchemy/cloudflare";
+import { CloudflareStateStore } from "alchemy/state";
 
-const app = await alchemy("cfa-tana-tunnel");
+console.log(
+	"ALCHEMY_PASSWORD",
+	process.env.ALCHEMY_PASSWORD ? "set" : "not set",
+);
+console.log(
+	"ALCHEMY_STATE_TOKEN",
+	process.env.ALCHEMY_STATE_TOKEN ? "set" : "not set",
+);
+console.log(
+	"CLOUDFLARE_API_TOKEN",
+	process.env.CLOUDFLARE_API_TOKEN ? "set" : "not set",
+);
+console.log(
+	"CLOUDFLARE_ACCOUNT_ID",
+	process.env.CLOUDFLARE_ACCOUNT_ID ? "set" : "not set",
+);
+console.log(
+	"CLOUDFLARE_EMAIL",
+	process.env.CLOUDFLARE_EMAIL ? "set" : "not set",
+);
+console.log(
+	"TANA_BEARER_TOKEN",
+	process.env.TANA_BEARER_TOKEN ? "set" : "not set",
+);
+console.log("AUTH_PASSWORD", process.env.AUTH_PASSWORD ? "set" : "not set");
+console.log("JWT_SECRET", process.env.JWT_SECRET ? "set" : "not set");
 
+const app = await alchemy("cfa-tana-tunnel", {
+	stateStore: (scope) => new CloudflareStateStore(scope),
+	password: process.env.ALCHEMY_PASSWORD,
+	adopt: true,
+});
+
+// Tunnel now routes to tana-origin.nicobaier.com
 const tunnel = await Tunnel("tana-mcp", {
 	name: "tana-mcp",
 	adopt: true,
 	ingress: [
 		{
-			hostname: "tana.nicobaier.com",
+			hostname: "tana-origin.nicobaier.com",
 			service: "http://localhost:8262",
 			originRequest: { httpHostHeader: "localhost:8262" },
 		},
@@ -22,5 +55,38 @@ console.log("Tunnel ID:", tunnel.tunnelId);
 console.log("Run locally with:");
 console.log(`  cloudflared tunnel run --token ${tunnel.token.unencrypted}`);
 console.log("--------------------------------");
+
+// KV namespace for OAuth state (auth codes + client registrations)
+const oauthKv = await KVNamespace("oauth-kv", {
+	title: "tana-proxy-oauth-kv",
+});
+
+// OAuth proxy Worker at tana.nicobaier.com
+const worker = await Worker("tana-proxy", {
+	name: `tana-proxy-${app.stage}`,
+	entrypoint: "./src/worker.ts",
+	url: false,
+	adopt: true,
+	bindings: {
+		OAUTH_KV: oauthKv,
+		TANA_BEARER_TOKEN: alchemy.secret(process.env.TANA_BEARER_TOKEN),
+		AUTH_PASSWORD: alchemy.secret(process.env.AUTH_PASSWORD),
+		JWT_SECRET: alchemy.secret(process.env.JWT_SECRET),
+		ORIGIN_URL: "https://tana-origin.nicobaier.com",
+		PUBLIC_URL: "https://tana.nicobaier.com",
+	},
+	// Only bind the production route for the prod stage
+	...(app.stage === "prod" && {
+		routes: [
+			{
+				pattern: "tana.nicobaier.com/*",
+			},
+		],
+	}),
+});
+
+await WranglerJson({ worker });
+
+console.log("Worker:", worker.name);
 
 await app.finalize();
