@@ -75,11 +75,14 @@ const worker = await Worker("tana-proxy", {
 		ORIGIN_URL: "https://tana-origin.nicobaier.com",
 		PUBLIC_URL: "https://tana.nicobaier.com",
 	},
-	routes: [
-		{
-			pattern: "tana.nicobaier.com/*",
-		},
-	],
+	// Only bind the production route for the prod stage
+	...(app.stage === "prod" && {
+		routes: [
+			{
+				pattern: "tana.nicobaier.com/*",
+			},
+		],
+	}),
 });
 
 await WranglerJson({ worker });

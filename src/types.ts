@@ -18,11 +18,13 @@ export type AppContext = Context<Env>;
 
 export interface ClientRegistration {
   client_id: string;
+  client_secret?: string;
   client_name?: string;
   redirect_uris: string[];
   grant_types: string[];
   response_types: string[];
   token_endpoint_auth_method: string;
+  scope?: string;
   client_uri?: string;
 }
 
