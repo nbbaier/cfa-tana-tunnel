@@ -2,33 +2,6 @@ import alchemy from "alchemy";
 import { KVNamespace, Tunnel, Worker, WranglerJson } from "alchemy/cloudflare";
 import { CloudflareStateStore } from "alchemy/state";
 
-console.log(
-	"ALCHEMY_PASSWORD",
-	process.env.ALCHEMY_PASSWORD ? "set" : "not set",
-);
-console.log(
-	"ALCHEMY_STATE_TOKEN",
-	process.env.ALCHEMY_STATE_TOKEN ? "set" : "not set",
-);
-console.log(
-	"CLOUDFLARE_API_TOKEN",
-	process.env.CLOUDFLARE_API_TOKEN ? "set" : "not set",
-);
-console.log(
-	"CLOUDFLARE_ACCOUNT_ID",
-	process.env.CLOUDFLARE_ACCOUNT_ID ? "set" : "not set",
-);
-console.log(
-	"CLOUDFLARE_EMAIL",
-	process.env.CLOUDFLARE_EMAIL ? "set" : "not set",
-);
-console.log(
-	"TANA_BEARER_TOKEN",
-	process.env.TANA_BEARER_TOKEN ? "set" : "not set",
-);
-console.log("AUTH_PASSWORD", process.env.AUTH_PASSWORD ? "set" : "not set");
-console.log("JWT_SECRET", process.env.JWT_SECRET ? "set" : "not set");
-
 const app = await alchemy("cfa-tana-tunnel", {
 	stateStore: (scope) => new CloudflareStateStore(scope),
 	password: process.env.ALCHEMY_PASSWORD,
@@ -72,6 +45,7 @@ const worker = await Worker("tana-proxy", {
 		TANA_BEARER_TOKEN: alchemy.secret(process.env.TANA_BEARER_TOKEN),
 		AUTH_PASSWORD: alchemy.secret(process.env.AUTH_PASSWORD),
 		JWT_SECRET: alchemy.secret(process.env.JWT_SECRET),
+		API_TOKEN: alchemy.secret(process.env.API_TOKEN),
 		ORIGIN_URL: "https://tana-origin.nicobaier.com",
 		PUBLIC_URL: "https://tana.nicobaier.com",
 	},

@@ -34,3 +34,4 @@ jobs:
               TANA_BEARER_TOKEN: ${{ secrets.TANA_BEARER_TOKEN }}
               AUTH_PASSWORD: ${{ secrets.AUTH_PASSWORD }}
               JWT_SECRET: ${{ secrets.JWT_SECRET }}
+              API_TOKEN: ${{ secrets.API_TOKEN }}

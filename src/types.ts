@@ -8,6 +8,7 @@ export interface Env {
     JWT_SECRET: string;
     ORIGIN_URL: string;
     PUBLIC_URL: string;
+    API_TOKEN: string;
   };
   Variables: {
     clientId?: string;

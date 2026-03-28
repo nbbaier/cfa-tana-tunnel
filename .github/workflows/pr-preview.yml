@@ -43,6 +43,7 @@ jobs:
               TANA_BEARER_TOKEN: ${{ secrets.TANA_BEARER_TOKEN }}
               AUTH_PASSWORD: ${{ secrets.AUTH_PASSWORD }}
               JWT_SECRET: ${{ secrets.JWT_SECRET }}
+              API_TOKEN: ${{ secrets.API_TOKEN }}
    cleanup-preview:
       if: ${{ github.event.action == 'closed' }}
       runs-on: ubuntu-latest
@@ -69,3 +70,4 @@ jobs:
               TANA_BEARER_TOKEN: ${{ secrets.TANA_BEARER_TOKEN }}
               AUTH_PASSWORD: ${{ secrets.AUTH_PASSWORD }}
               JWT_SECRET: ${{ secrets.JWT_SECRET }}
+              API_TOKEN: ${{ secrets.API_TOKEN }}
